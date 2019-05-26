@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+mainClassName = "in.dhrubo.demo.TestDemo"
+
+group = 'in.dhrubo.demo.hk2'
+version = '1.0-SNAPSHOT'
+
+description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+repositories {
+        
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'org.glassfish.hk2', name: 'hk2-api', version:'2.5.0'
+    compile group: 'org.glassfish.hk2', name: 'hk2-locator', version:'2.5.0'
+    compileOnly group: 'org.glassfish.hk2', name: 'hk2-metadata-generator', version:'2.5.0'
+}

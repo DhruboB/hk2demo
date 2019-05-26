@@ -1,0 +1,11 @@
+bin/
+**/**/.jar
+*.jar
+target/
+.idea
+*.iml
+build/
+gradle/
+.gradle
+
+
