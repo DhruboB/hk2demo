@@ -107,26 +107,55 @@ Gradle command to run the application :
         mvn compile
         mvn exec:java -Dexec.mainClass="in.dhrubo.demo.TestDemo"
 
-##### Concept: Terminology & Design walk-through [ In Progress ]
+#### Concept: 
 
 We have successfully run the program and now lets deep dive into concept and workflow around how HK2 works.
 
-@Contract -   
-@Service -   
-@Named -  
-@Singleton -  
-@Rank -  
-@Stub -  
+##### Terminology
 
-Service Descriptor -   
-Binder -   
+* @Contract - This annotation is used by HK2 during automatic class analysis to indicate that a class or interface should be included in the list of contracts for a service   
+* @Service -  In order to mark a concrete implementation class as one that should be available as a service you annotate your class with @Service.   
+* @Named - This is optional, however it is best practice to use it with specific name to avoid any conflict based on multiple implementation from same @Contract. If you use the Named qualifier without specifying a name then the name you get is the class name without the package.
 
-###### How HK2 Loads [ In Progress ]
+###### Little advanced Annotations:  
+* @Stub - The HK2 metadata generator can also generate implementation classes based on abstract classes. Using Stub means that this abstract class may not need to be updated if the underlying interface or class has an added method.  
+* @Rank - The best instance of a service is a service with the highest ranking or the lowest service id. The ranking of a service is found in its Descriptor and can be changed at any time at run time. The Rank annotation will work when placed on the abstract class, so the stub can be given higher priority than the replacement class.    
+* @Qualifier - Services can also be qualified with annotations called qualifiers. Qualifiers are annotations that are themselves annotated with @Qualifier
 
-1. via Service Locator and inhabitant file
-2. via implementing and registering AbstractBinder
+There are few others too e.g. @Retention, @Target   
+
+###### Life Cycle Annotations:
+There are few life cycle annotations available e.g. @PostConstruct @PostDestroy, however skipping detail discussion about these for now.   
+
+###### What is Service Descriptor & Binder ?
+
+* *Descriptor* : A Descriptor is a bean-like structure that describes a service declaration in HK2. A descriptor is comprised only of basic objects such as String or boolean (e.g., not Class or Annotation}. A described service does not need to be classloaded in order to have a Descriptor. However, this does imply that a Descriptor will have some loss of information when compared to a classloaded service, which is described with an ActiveDescriptor. For example, a Descriptor can know that a service has a qualifier named Foo, but will not know (without the use of Metadata) what values Foo contains.
+  
+* *Binder* : The binder is used in conjunction with the ServiceLocatorUtilities.bind(org.glassfish.hk2.api.ServiceLocator, Binder...) method in order to add (or remove) services to a ServiceLocator. This is useful when you have sets of related services to add into the locator.  
+
+
+#### Component & Design walk-through 
+
+Following components of HK2 container are most important ones.
+
+1. ServiceLocator
+2. Inhabitant Metadata
+3. ServiceLocatorUtilities  
+
+Below sequence diagram may help you to understand how Bike or Car objects are injected in this example.
+
+[ TODO - Diagram ]   
+
+##### How HK2 Loads 
+
+Primarily there are two ways that HK2 container loads all injectable Service Objects as following 
+                        
+1. via Service Locator and inhabitant file - [ TODO ]  
+2. via implementing and registering AbstractBinder - [ TODO ]   
 
 There are many more topic in HK2 , but I like to limit this for now and will be including others as and when required or requested by readers. Please feel free to provide your opinion in comment section. I will take action accordingly.
+
+Want to explore further in your own with some help , please go through https://javaee.github.io/hk2/extensibility.html try and learn more :)
 
 ##### DEBUGGING Observations:
 
@@ -134,12 +163,14 @@ There are many more topic in HK2 , but I like to limit this for now and will be 
 
 - Refactoring class name requires clean build to regenerate service definition in inhabitant file
 
-- Sometimes, inhabitant file gets overwritten after running the application from Intillij and this forces us to do a clean build once again.
+- Sometimes, inhabitant file gets overwritten after running the application from Intellij and this forces us to do a clean build once again.
+
+- declaring class level variable as static and with @Inject annotation will break HK2. I may not understand this yet, still searching for answer. 
 
 ##### Personal Opinion:
  
-My experience with HK2 is not as expected and I suggest you take special care while debugging. You may face unwanted exceptions that you would not foresee. It is not 100% reliable and seems unstable to me while generating inhabitant definition and as well as injecting objects. There are limitations that you need to be aware of. It requires fresh clean build every time if you make any injection related changes including refactoring of Java classes, which is to some extent logical if you change Contract & Service name. However, simply running the program may overwrite inhabitant file which could be problem with maven hk2-metadata-generator dependency module or IntelliJ (which I don't think). 
+This is first opinion which may change as I learn HK2 more & more, hence do not take this as granted for now. This is a mare viewpoint sharing for further discussion. My experience with HK2 is not as expected and I suggest you take special care while debugging. You may face unwanted exceptions that you would not foresee. It is not 100% reliable and seems unstable to me while generating inhabitant definition and as well as injecting objects. There are limitations that you need to be aware of. It requires fresh clean build every time if you make any injection related changes including refactoring of Java classes, which is to some extent logical if you change Contract & Service name. However, simply running the program may overwrite inhabitant file which could be problem with maven hk2-metadata-generator dependency module or IntelliJ (which I don't think). 
 
-There are other Dependency Injection framework available in market , you may want to try with e.g. Java EE6 CDI ,Guice , Dagger, Pico  If your design choice is not limited with only DI, you can also try OSGi, Spring etc.
+There are other Dependency Injection framework available in market , you may want to try with e.g. Java EE6 CDI ,Guice , Dagger, Pico etc. If your design choice is not limited with only DI, you can also try OSGi, Spring etc.
 
   
