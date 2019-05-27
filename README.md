@@ -158,11 +158,11 @@ Primarily there are two ways that HK2 container loads all injectable Service Obj
         AbstractBinder binder = new AbstractBinder() {
               @Override  
               protected void configure() {
-                bind(ServiceImpl.class).to(Service.class).in(Singleton.class);
+                bind(ServiceImpl.class).to(ServiceImpl.class).in(Singleton.class);
               }
             };
         ServiceLocatorUtilities.bind(binder);
-   Now, you just need to register this AbstarctBinder with your server container or by invoking  ServiceLocatorUtilities.bind(binder); as given above code snippet. This is basic idea of loading your injectable objects. However there are many more underlying concepts which you can go through and learn as you start using this HK2 Dependency Injection framework.  
+   Now, you just need to register this AbstarctBinder with your server container or by invoking  ServiceLocatorUtilities.bind(binder); as given in above code snippet. Here ServiceImpl is your injectable Service class. This is basic idea of loading your injectable objects. However there are many more underlying concepts which you can go through and learn as you start using this HK2 Dependency Injection framework.  
 
 There are many more topic in HK2 , but I like to limit this for now and will be including others as and when required or requested by readers. Please feel free to provide your opinion in comment section. I will take action accordingly.
 
