@@ -111,7 +111,7 @@ Gradle command to run the application :
 
 We have successfully run the program and now lets deep dive into concept and workflow around how HK2 works.
 
-##### Terminology
+###### Terminology
 
 * @Contract - This annotation is used by HK2 during automatic class analysis to indicate that a class or interface should be included in the list of contracts for a service   
 * @Service -  In order to mark a concrete implementation class as one that should be available as a service you annotate your class with @Service.   
@@ -142,6 +142,8 @@ Following components of HK2 container are most important ones.
 2. Inhabitant Metadata
 3. ServiceLocatorUtilities  
 
+Complete HK2 APIs are available here > https://javaee.github.io/hk2/apidocs/index.html?org/glassfish/hk2/api/Context.html
+
 Below sequence diagram may help you to understand how Bike or Car objects are injected in this example.
 
 [ TODO - Diagram ]   
@@ -150,8 +152,17 @@ Below sequence diagram may help you to understand how Bike or Car objects are in
 
 Primarily there are two ways that HK2 container loads all injectable Service Objects as following 
                         
-1. via Service Locator and inhabitant file - [ TODO ]  
-2. via implementing and registering AbstractBinder - [ TODO ]   
+1. *via Service Locator and inhabitant file* - ServiceLocator is Interface (Contract) to interact with HK2 2.0 API. This scans all available services and return. HK2 APIs provide a stand alone class ServiceLocatorUtilities which has methods to trigger HK2 container loading e.g. createAndPopulateServiceLocator(). This methods need to be called from your initial part of main method if it is a stand alone program. If you are using any server container , you can happily include this call within any boot loader mechanism. As soon as ServiceLocatorUtilities.createAndPopulateServiceLocator() is called, HK2 framework code gets trigger and scans all the classes avaialble marked with @Contract and @Service annotations from inhabitant file. Default location of inhabitant file is ~/META-INF/hk2-locator/default , however there is way to place this file at your preferred location. Now, when HK2 frameworks reads all definitions of injectable Objects and its injectable properties like @Named, @Rank , @Singleton etc. it will know how to create those Objects as per client need and provide the same where marked with appropriate @Inject annotation. There are three way of injecting Objects at 1) Property 2) Method & 3) Constructor level.     
+2. *via implementing and registering AbstractBinder* - This approach also works similarly however just HK2 triggering mechanism is different. Here, you can implement AbstractBinder as following and bind your Service Object class with HK2. You need to implement configure() method and invoke bind to include the definition of your Service Object class with HK2.  
+        
+        AbstractBinder binder = new AbstractBinder() {
+              @Override  
+              protected void configure() {
+                bind(ServiceImpl.class).to(Service.class).in(Singleton.class);
+              }
+            };
+        ServiceLocatorUtilities.bind(binder);
+   Now, you just need to register this AbstarctBinder with your server container or by invoking  ServiceLocatorUtilities.bind(binder); as given above code snippet. This is basic idea of loading your injectable objects. However there are many more underlying concepts which you can go through and learn as you start using this HK2 Dependency Injection framework.  
 
 There are many more topic in HK2 , but I like to limit this for now and will be including others as and when required or requested by readers. Please feel free to provide your opinion in comment section. I will take action accordingly.
 
@@ -169,8 +180,8 @@ Want to explore further in your own with some help , please go through https://j
 
 ##### Personal Opinion:
  
-This is first opinion which may change as I learn HK2 more & more, hence do not take this as granted for now. This is a mare viewpoint sharing for further discussion. My experience with HK2 is not as expected and I suggest you take special care while debugging. You may face unwanted exceptions that you would not foresee. It is not 100% reliable and seems unstable to me while generating inhabitant definition and as well as injecting objects. There are limitations that you need to be aware of. It requires fresh clean build every time if you make any injection related changes including refactoring of Java classes, which is to some extent logical if you change Contract & Service name. However, simply running the program may overwrite inhabitant file which could be problem with maven hk2-metadata-generator dependency module or IntelliJ (which I don't think). 
+This is first opinion which may change as I learn HK2 more & more, hence do not take this as granted for now. This is a mare viewpoint sharing for further discussion. My experience with HK2 is not as expected and I suggest you take special care while debugging. You may face unwanted exceptions that you would not foresee. It is not 100% reliable and seems unstable to me while generating inhabitant definition and as well as injecting objects. There are limitations that you need to be aware of. It requires fresh clean build every time if you make any injection related changes including refactoring of Java classes, which is to some extent logical if you change Contract & Service name. However, while simply running the program, I have observed that it may overwrite inhabitant file with incomplete detail. This could be problem with maven hk2-metadata-generator dependency module or IntelliJ (which I don't think). 
 
-There are other Dependency Injection framework available in market , you may want to try with e.g. Java EE6 CDI ,Guice , Dagger, Pico etc. If your design choice is not limited with only DI, you can also try OSGi, Spring etc.
+There are other Dependency Injection framework available in market , you may want to try with e.g. Java EE6 CDI ,Guice , Dagger, Pico etc. If your design choice is not limited with only DI, you can also try OSGi, Spring etc. which are most reliable and battle proven framework in java world.
 
   
