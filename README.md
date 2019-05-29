@@ -178,7 +178,7 @@ Want to explore further in your own with some help , please go through https://j
 
 - declaring class level variable as static and with @Inject annotation will break HK2. I may not understand this yet, still searching for answer. 
 
-##### Personal Opinion:
+##### Limitations:
  
 This is first opinion which may change as I learn HK2 more & more, hence do not take this as granted for now. This is a mare viewpoint sharing for further discussion. My experience with HK2 is not as expected and I suggest you take special care while debugging. You may face unwanted exceptions that you would not foresee. It is not 100% reliable and seems unstable to me while generating inhabitant definition and as well as injecting objects. There are limitations that you need to be aware of. It requires fresh clean build every time if you make any injection related changes including refactoring of Java classes, which is to some extent logical if you change Contract & Service name. However, while simply running the program, I have observed that it may overwrite inhabitant file with incomplete detail. This could be problem with maven hk2-metadata-generator dependency module or IntelliJ (which I don't think). 
 
