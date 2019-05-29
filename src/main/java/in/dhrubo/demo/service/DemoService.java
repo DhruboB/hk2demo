@@ -30,6 +30,13 @@ public class DemoService implements DemoContract {
     // This is a FIELD injection
     @Inject @Named("Bike")
     private Vehicle bike;
+    // Injecting Default object without @Name as there are multiple implementation of Vehicle.
+    // This is happening due to @Rank annotation of one of implementation which is considered as
+    // default Object while injecting.Higher the rank, larger numeric value will take priority.
+    // This is a FIELD injection
+    @Inject
+    private Vehicle defaultVehicle;
+
 
     /**
      * This method is one of service method of this Service class. It provides detail about above Injected Objects.
@@ -43,5 +50,8 @@ public class DemoService implements DemoContract {
         System.out.println("== Bike Detail ==");
         System.out.println(bike.getBrandName());
         System.out.println(bike.turn());
+        System.out.println("== Default Vehicle Detail ==");
+        System.out.println(defaultVehicle.getBrandName());
+        System.out.println(defaultVehicle.turn());
     }
 }

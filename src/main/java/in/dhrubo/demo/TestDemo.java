@@ -3,6 +3,9 @@ package in.dhrubo.demo;
 import in.dhrubo.demo.service.DemoService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
+import javax.inject.Singleton;
 
 /**
  * This is a test class to trigger the DemoService via HK2 Dependency Injection framework.
@@ -30,12 +33,30 @@ public class TestDemo {
 
     /**
      * This method acts as loader of HK2 framework and scans all relevant annotated class definition and
-     * loads as appropriate. However, HK2 framework deferes class loading as much as possible till classes are required.
+     * loads as appropriate. However, HK2 framework defers class instantiating as much as possible till classes are required.
      *
      * @return ServiceLocator
      * @author Dhrubo
      */
     private static ServiceLocator loadHK2(){
         return ServiceLocatorUtilities.createAndPopulateServiceLocator();
+    }
+
+    /**
+     * This method acts as loader of HK2 framework and bind provided class definition with Dynamic configuration and
+     * loads as appropriate. However, HK2 framework defers class instantiating as much as possible till the class is required.
+     * This is sample method but not used in this project yet.
+     *
+     * @return void
+     * @author Dhrubo
+     */
+    private static void loadHK2Dynamically(){
+        AbstractBinder binder = new AbstractBinder() {
+            @Override
+            protected void configure() {
+                bind(DemoService.class).to(DemoService.class).in(Singleton.class);
+            }
+        };
+        ServiceLocatorUtilities.bind(binder);
     }
 }

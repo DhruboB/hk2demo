@@ -4,7 +4,7 @@ This project is created to demonstrate how we can use HK2 framework to resolve d
 
 Usually, as of today, there is very limited HK2 documentation available in Internet. Latest and most useful documentation site is https://javaee.github.io/hk2/ , however this is also not continuously maintained and updated. Not quite good too for first time learner.
 
-Thus, I am trying to document my experience with HK2, so developers who want to learn HK2 dependency container can quickly pick up and start using it without much hick up :) Note, it is still in-progress DRAFT documentation, will be updated as we progress. 
+Thus, I am trying to document my experience with HK2, so developers who want to learn HK2 dependency container can quickly pick up and start using it without much hick up :) This will give you a Kick start and then I am sure , when you will explore more with HK2, will learn more about topics/areas which are not covered here. Note, it is still in-progress DRAFT documentation, will be updated as we progress. 
 
 ### What do we need to kick start with HK2 ?
 
@@ -64,7 +64,7 @@ Inhabitant file contains all Service Definitions that HK2 Dependency container s
 2. Using inhabitant file generator tool provided by HK2 
 3. Best one : Using Maven or Gradle plugin. We already added the hk2-metadata-generator plugin in Maven or Gradle dependencies.
 
-Third option is easy & simplest, hence not discussuing about first two options here. Gradle or Maven plugin will take care of inhabitant file generation as soon as you trigger fresh build. Though, there is a glitch/bug , hence you may need to sometime fo a clean build if you see weird Exceptions which are basically due to incomplete inhabitant file.   
+Third option is easy & simplest, hence not discussing about first two options here. Gradle or Maven plugin will take care of inhabitant file generation as soon as you trigger fresh build. Though, there is a glitch/bug , hence you may need to sometime fo a clean build if you see weird Exceptions which are basically due to incomplete inhabitant file.   
 
 ###### Sample inhabitant file content:
 
@@ -119,7 +119,7 @@ We have successfully run the program and now lets deep dive into concept and wor
 
 ###### Little advanced Annotations:  
 * @Stub - The HK2 metadata generator can also generate implementation classes based on abstract classes. Using Stub means that this abstract class may not need to be updated if the underlying interface or class has an added method.  
-* @Rank - The best instance of a service is a service with the highest ranking or the lowest service id. The ranking of a service is found in its Descriptor and can be changed at any time at run time. The Rank annotation will work when placed on the abstract class, so the stub can be given higher priority than the replacement class.    
+* @Rank - The best instance of a service is a service with the highest ranking or the lowest service id. The ranking of a service is found in its Descriptor and can be changed at any time at run time. The Rank annotation will work when placed on the abstract class, so the stub can be given higher priority than the replacement class. Higher @Rank number will take priority while injecting Service Object by default.     
 * @Qualifier - Services can also be qualified with annotations called qualifiers. Qualifiers are annotations that are themselves annotated with @Qualifier
 
 There are few others too e.g. @Retention, @Target   
@@ -146,7 +146,7 @@ Complete HK2 APIs are available here > https://javaee.github.io/hk2/apidocs/inde
 
 Below sequence diagram may help you to understand how Bike or Car objects are injected in this example.
 
-[ TODO - Diagram ]   
+![ Sequence Diagram ](doc/images/HK2DemoSeq.png)   
 
 ##### How HK2 Loads 
 

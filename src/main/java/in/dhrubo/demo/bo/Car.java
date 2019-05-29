@@ -1,6 +1,7 @@
 package in.dhrubo.demo.bo;
 
 import in.dhrubo.demo.bointerface.Vehicle;
+import org.glassfish.hk2.api.Rank;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Named;
@@ -11,7 +12,7 @@ import javax.inject.Named;
  * @author Dhrubo
  * @license MIT
  */
-@Service @Named
+@Service @Named @Rank(100)
 public class Car implements Vehicle {
 
     private static final String brandName = "Audi";
